@@ -1,0 +1,29 @@
+name: Deploy to Aliyun ECS
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.ALIYUN_ECS_IP }}       # ECS 公网IP
+          username: ${{ secrets.ALIYUN_ECS_USER }} # 如 root 或 ubuntu
+          key: ${{ secrets.ALIYUN_ECS_SSH_KEY }}   # SSH 私钥（需提前配置到ECS）
+          script: |
+            cd /opt/flask-app/butterfly
+            git pull origin main
+            /opt/flask-app/venv/bin/pip install -r requirements.txt
+            sudo systemctl restart butterfly-svc
