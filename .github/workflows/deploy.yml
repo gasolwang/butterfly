@@ -24,15 +24,15 @@ jobs:
       - name: Run tests
         run: pytest -v test_app.py  # 运行单元测试
 
-#      - name: Deploy via SSH
-#        uses: appleboy/ssh-action@v1
-#        with:
-#          host: ${{ secrets.ALIYUN_ECS_IP }}       # ECS 公网IP
-#          username: ${{ secrets.ALIYUN_ECS_USER }} # 如 root 或 ubuntu
-#          key: ${{ secrets.ALIYUN_ECS_SSH_KEY }}   # SSH 私钥（需提前配置到ECS）
-#          script: |
-#            cd /opt/flask-app/butterfly
-#            git pull origin main
-#            /opt/flask-app/venv/bin/pip install -r requirements.txt
-#            sudo systemctl restart butterfly-svc
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.ALIYUN_ECS_IP }}       # ECS 公网IP
+          username: ${{ secrets.ALIYUN_ECS_USER }} # 如 root 或 ubuntu
+          key: ${{ secrets.ALIYUN_ECS_SSH_KEY }}   # SSH 私钥（需提前配置到ECS）
+          script: |
+            cd /opt/flask-app/butterfly
+            git pull origin main
+            /opt/flask-app/venv/bin/pip install -r requirements.txt
+            sudo systemctl restart butterfly-svc
 
